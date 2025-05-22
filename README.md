@@ -32,10 +32,11 @@ This project implements a multi-agent system designed to generate comprehensive 
    ```
 
 4. **Set up environment variables:**
-   Create a `.env` file and add your OpenAI API key:
+   Export your OpenAI API key as an environment variable in your terminal session. 
+   ```bash
+   export OPENAI_API_KEY="your_openai_api_key_here"
    ```
-   OPENAI_API_KEY="your_openai_api_key_here"
-   ```
+
 
 ## Usage
 
@@ -44,38 +45,28 @@ This project implements a multi-agent system designed to generate comprehensive 
 Execute the main script to run the educational content generation system:
 
 ```bash
-python scripts/run_teach_intermediate.py
+python scripts/run_teach_intermediate.py --question "Your educational question here"
 ```
 
-By default, this script uses predefined example queries. To modify the query, you can make changes within the script.
+By default, if no `--question` argument is provided, the script uses a predefined example query. 
 
 Output will be saved in the `outputs/teach_intermediate/` directory, with subdirectory names containing a timestamp and a brief description of the query (e.g., `outputs/teach_intermediate/YYYYMMDD_HHMMSS_explain_concept_photosynthesis/`).
 
-### GSM8K Dataset Testing
+### Batch Processing of Educational Questions
 
-The system also provides an example script for processing the GSM8K dataset, which can be used for batch processing of mathematical problems:
+For processing multiple educational questions from a dataset (e.g., `train.jsonl`), you can use the `run_teach_intermediate_batch.py` script. This script iterates through questions in a JSONL file and runs the full `TeachAgentsIntermediateSystem` for each.
 
 ```bash
-python scripts/run_gsm8k_test.py --data_file_path mydatasets/train.jsonl --num_samples 5
+python scripts/run_teach_intermediate_batch.py --data_file mydatasets/train.jsonl --limit 5
 ```
 
 This script supports the following parameters:
 
-- `--data_file_path`: Path to the GSM8K JSONL data file (relative to the project root), default is `mydatasets/train.jsonl`
-- `--config_path`: Path to the multi-agent system configuration YAML file, default is `config/multi_agents/base.yaml`
-- `--output_dir_base`: Base directory for test outputs, default is `outputs/gsm8k_tests`
-- `--num_samples`: Number of samples to process (if not specified, all samples will be processed)
-- `--question_field`: Field name in the JSONL file containing the question text, default is `question`
+-   `--data_file` (required): Path to the JSONL data file containing the questions (e.g., `mydatasets/train.jsonl`). Each JSON object in the file should have a `"question"` field.
+-   `--limit` (optional): Number of questions to process from the beginning of the file. If not specified, all questions will be processed.
 
-Output for each problem will be saved in a separate directory, with directory names containing a timestamp and a brief description of the problem.
+Output for each question will be saved in a separate subdirectory within `outputs/teach_intermediate_batch/`. Each subdirectory will be uniquely named using the line number from the input file, a timestamp, and a slug derived from the question.
 
-## Project Features
-
-* **Multi-Agent Collaboration:** Utilizes a series of specialized agents (such as Visual Representation Specialist, Information Expression Specialist, Cognitive Strategy Specialist, Metacognitive Strategy Specialist, Schema Instruction Specialist, Web Page Formatting Specialist) contributing diverse expertise.
-* **Structured Educational Content:** Generates teaching plans broken down into logical sections, each addressing specific learning objectives.
-* **Iterative Improvement:** Employs improvement cycles where expert agents provide feedback on each section of the plan, and synthesis agents integrate this feedback to improve the content.
-* **Configurable Agents and Models:** Agent behaviors and LM model parameters can be configured through YAML files.
-* **OpenAI Integration:** Currently uses OpenAI models (such as GPT-4o) for language generation tasks.
 
 ## Directory Structure
 
@@ -84,11 +75,9 @@ EduVisAgent/
 ├── agents/                         # Core agent logic
 ├── config/                         # Configuration files
 ├── models/                         # Language model interfaces
+├── mydatasets/                     # Dataset files
 ├── outputs/                        # Generated outputs
 ├── scripts/                        # Executable scripts
-├── mydatasets/                     # Dataset files
 ├── image/                          # Image resources
-├── webview/                        # Web viewing utilities
+├── utils/                          # Utility functions and classes
 └── README.md                       # This file
-```
-
