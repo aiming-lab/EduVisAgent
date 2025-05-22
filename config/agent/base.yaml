@@ -1,0 +1,28 @@
+module_name: agents.base_agent
+class_name: Agent
+use_text: false
+use_image: false
+max_retries: 3
+
+name: base
+description: This agent is a base agent.
+reason: default
+system_prompt: You are a helpful assistant.
+
+self_reflect_prompt: Please carefully review the provided answer, considering the accuracy, relevance, and completeness of the response. Assess the reasoning and evidence used to arrive at the conclusion. Then, provide a confidence level for the answer on a scale from 1 to 10 (1 = very low confidence, 10 = very high confidence). Along with the confidence level, explain the rationale behind your assessment, including any uncertainties, potential errors, or missing information that may affect the confidence. If there are any uncertainties or assumptions made, explicitly state them in your response.
+
+eval_system_prompt: |
+  Question: {question}
+  Predicted Answer: {answer}
+  Ground Truth Answer: {gt}
+  
+  Please evaluate if the predicted answer is correct compared to the ground truth.
+  Score the answer on:
+  1. Relevance (0-1): How relevant is the predicted answer to the question
+  2. Correctness (0-1): How correct is the predicted answer compared to ground truth
+  3. Binary correctness (0-1): 1 if the answer is correct, 0 if it is incorrect
+
+  Return only a string with these scores in a dictionary and can be parsed by json.loads, e.g. {{"relevance": 0.8, "correctness": 0.7, "binary_correctness": 1}}
+
+discuss_prompt: |
+  Consider the above answers, confidence, opinions and discussions from other agents. Determine if you need to communicate with the other agents. Respond in JSON format where keys are agent IDs and values are your responses or null if no communication is needed. For example, {"0": "I agree with your answer.", "1": null}

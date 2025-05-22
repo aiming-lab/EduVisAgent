@@ -1,0 +1,8 @@
+defaults:
+  - base
+  - _self_
+
+model: gpt-4o
+api_key: here_is_your_openai_api_key:D
+module_name: models.openai
+class_name: MyOpenAI

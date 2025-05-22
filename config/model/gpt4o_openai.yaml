@@ -1,0 +1,6 @@
+model_id: "gpt-4o"
+module_name: "models.openai_model" 
+class_name: "OpenAIModel"
+temperature: 0.7
+max_tokens: 4096 # Increased slightly for potentially longer plans
+# api_key: "YOUR_OPENAI_API_KEY" # It's best practice to set the OPENAI_API_KEY environment variable
