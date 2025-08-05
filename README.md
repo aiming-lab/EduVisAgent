@@ -1,10 +1,19 @@
-# EduVisAgent: A Multi-Agent Framework for Pedagogical Visualization
+# EduVisAgent: A Benchmark and Multi-Agent Framework for Pedagogical Visualization
+
+**Paper:** [From EduVisBench to EduVisAgent: A Benchmark and Multi-Agent Framework for Pedagogical Visualization](https://arxiv.org/abs/2505.16832)
 
 ## Overview
 
-This project implements a multi-agent system designed to generate comprehensive educational content based on user queries. It leverages a series of specialized language model (LM) agents working collaboratively to create detailed teaching plans, improve them through iterative feedback, and build structured content for various presentation formats. The core of the system is the `TeachAgentsIntermediateSystem`, which coordinates the entire workflow.
+This project introduces **EduVisAgent**, a multi-agent framework designed to generate comprehensive educational visualizations from user queries, and **EduVisBench**, a benchmark for evaluating the quality of these visualizations. The system leverages a series of specialized language model (LM) agents that work collaboratively to create detailed teaching plans, improve them through iterative feedback, and build structured content for various presentation formats. The core of the system is the `TeachAgentsIntermediateSystem`, which coordinates the entire workflow.
 
 ![Main System Architecture](./image/main.png)
+
+## Features
+
+- **Multi-Agent System:** A collaborative team of AI agents for generating educational content.
+- **Iterative Refinement:** Agents provide feedback to each other to improve the quality of the generated content.
+- **Structured Output:** Generates structured content suitable for various presentation formats.
+- **Evaluation Benchmark (EduVisBench):** A comprehensive benchmark to assess the quality of pedagogical visualizations based on five key dimensions.
 
 ## Requirements
 
@@ -37,10 +46,9 @@ This project implements a multi-agent system designed to generate comprehensive 
    export OPENAI_API_KEY="your_openai_api_key_here"
    ```
 
-
 ## Usage
 
-### Basic Operation
+### Generating Educational Visualizations
 
 Execute the main script to run the educational content generation system:
 
@@ -60,13 +68,21 @@ For processing multiple educational questions from a dataset (e.g., `train.jsonl
 python scripts/run_teach_intermediate_batch.py --data_file mydatasets/train.jsonl --limit 5
 ```
 
-This script supports the following parameters:
+### Evaluating Visualizations with EduVisBench
 
--   `--data_file` (required): Path to the JSONL data file containing the questions (e.g., `mydatasets/train.jsonl`). Each JSON object in the file should have a `"question"` field.
--   `--limit` (optional): Number of questions to process from the beginning of the file. If not specified, all questions will be processed.
+To evaluate visualizations against the benchmark, simply run the evaluation script:
 
-Output for each question will be saved in a separate subdirectory within `outputs/teach_intermediate_batch/`. Each subdirectory will be uniquely named using the line number from the input file, a timestamp, and a slug derived from the question.
+   ```bash
+   python evaluation/run_evaluation.py
+   ```
 
+   The script will automatically check for the EduVisBench dataset. If it's not found locally, it will be downloaded from Hugging Face before the evaluation begins. This includes the necessary JSON data and images.
+
+
+
+## Dataset
+
+The EduVisBench dataset is automatically downloaded from the [Haonian/EduVisBench](https://huggingface.co/datasets/Haonian/EduVisBench) repository on Hugging Face when you run the evaluation script for the first time. For a detailed description of the dataset, including its structure, statistics, and data sources, please see [`DATASET.md`](./DATASET.md).
 
 ## Directory Structure
 
@@ -74,10 +90,27 @@ Output for each question will be saved in a separate subdirectory within `output
 EduVisAgent/
 ├── agents/                         # Core agent logic
 ├── config/                         # Configuration files
+├── evaluation/                     # Evaluation scripts and data
+│   ├── data/                       # Benchmark data (auto-downloaded)
+│   └── run_evaluation.py           # Script for running EduVisBench evaluation
+├── image/                          # Image resources for README
 ├── models/                         # Language model interfaces
-├── mydatasets/                     # Dataset files
-├── outputs/                        # Generated outputs
-├── scripts/                        # Executable scripts
-├── image/                          # Image resources
+├── mydatasets/                     # Directory for custom user datasets
+├── scripts/                        # Main executable scripts
 ├── utils/                          # Utility functions and classes
+├── install.sh                      # Installation script
 └── README.md                       # This file
+```
+
+## Citation
+
+If you find this work useful, please cite our paper:
+
+```bibtex
+@article{ji2025eduvisbench,
+  title={From EduVisBench to EduVisAgent: A Benchmark and Multi-Agent Framework for Pedagogical Visualization},
+  author={Ji, Haonian and Qiu, Shi and Xin, Siyang and Han, Siwei and Chen, Zhaorun and Wang, Hongyi and Zhang, Dake and Yao, Huaxiu},
+  journal={arXiv preprint arXiv:2505.16832},
+  year={2025}
+}
+```
